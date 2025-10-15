@@ -116,17 +116,17 @@ impl EventUpdater for EphemeralTickDataProvider<I24> {
 
 impl Pool<EphemeralTickDataProvider<I24>> {
     #[inline]
-    fn update_on_mint(&mut self, event: &Log<IUniswapV3PoolEvents::Mint>) {
+    pub fn update_on_mint(&mut self, event: &Log<IUniswapV3PoolEvents::Mint>) {
         self.liquidity += event.inner.data.amount;
         self.tick_data_provider.update_on_mint(event);
     }
     #[inline]
-    fn update_on_burn(&mut self, event: &Log<IUniswapV3PoolEvents::Burn>) {
+    pub fn update_on_burn(&mut self, event: &Log<IUniswapV3PoolEvents::Burn>) {
         self.liquidity -= event.inner.data.amount;
         self.tick_data_provider.update_on_burn(event);
     }
     #[inline]
-    const fn update_on_swap(&mut self, event: &Log<IUniswapV3PoolEvents::Swap>) {
+    pub const fn update_on_swap(&mut self, event: &Log<IUniswapV3PoolEvents::Swap>) {
         self.sqrt_ratio_x96 = event.inner.data.sqrtPriceX96;
         self.liquidity = event.inner.data.liquidity;
         self.tick_current = event.inner.data.tick;
