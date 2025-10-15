@@ -59,6 +59,31 @@ impl<I: TickIndex> EphemeralTickDataProvider<I> {
             ticks,
         })
     }
+
+    pub fn contains_tick(&self, tick_index: I) -> bool {
+        self.ticks.iter().any(|t| tick_index.eq(&t.index))
+    }
+
+    pub fn insert_tick(&mut self, tick: Tick<I>) {
+        let insert_at = self
+            .ticks
+            .iter()
+            .position(|t| tick.index > t.index)
+            .or(Some(0))
+            .unwrap();
+        self.ticks[insert_at..].rotate_right(1);
+        self.ticks[insert_at] = tick;
+    }
+
+    pub fn update_tick(&mut self, tick_index: I, liquidity_gross: u128, liquidity_net: i128) {
+        for tick in self.ticks.iter_mut() {
+            if tick.index.eq(&tick_index) {
+                tick.liquidity_gross = liquidity_gross;
+                tick.liquidity_net = liquidity_net;
+                break;
+            }
+        }
+    }
 }
 
 impl<I: TickIndex> From<EphemeralTickDataProvider<I>> for TickListDataProvider<I> {

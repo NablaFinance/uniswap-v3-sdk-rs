@@ -55,6 +55,9 @@ pub enum Error {
     #[error("No tick data provider was given")]
     NoTickDataError,
 
+    #[error("Tick data provider does not support this action")]
+    TickDataProviderUnsupportedAction,
+
     #[error("{0}")]
     TickListError(#[from] TickListError),
 
